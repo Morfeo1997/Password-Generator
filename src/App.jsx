@@ -8,6 +8,7 @@ const App = ()=>{
   const [useSymbols, setUseSymbols] = useState(false);
   const [useNumbers, setUseNumbers] = useState(false);
   const [password, setPassword] = useState('');
+  const [copied, setCopied] = useState(false);
 
   const generatePassword = () => {
     let characters = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
@@ -21,7 +22,22 @@ const App = ()=>{
     }
     
     setPassword(generatedPassword);
+    setCopied(false);
+
+
+    
   };
+
+  const copyToClipboard = () => {
+    if (password) {
+      navigator.clipboard.writeText(password).then(() => {
+        setCopied(true); 
+      }).catch(err => {
+        console.error('Error al copiar la contraseña: ', err);
+      });
+    }
+  };
+
 
 
   return (
@@ -38,22 +54,25 @@ const App = ()=>{
         
         <input type="range" min="8" max="20" value={length} onChange={(e) => setLength(e.target.value)}   className='inputs input-range'/>
 
-        
-        <label className='checkfield-container'>
+        <div className='checkfield-container'>
           <input type="checkbox" checked={useSymbols} onChange={(e) => setUseSymbols(e.target.checked)} className='inputs'/>
-          Incluir símbolos
-        </label>
+          <label>Incluir símbolos</label>
+        </div>
+
 
         <label className='checkfield-container'>
           <input type="checkbox" checked={useNumbers} onChange={(e) => setUseNumbers(e.target.checked)} className='inputs'/>
           Incluir números
         </label>
       
-        <button onClick={generatePassword} className='password-btn'>Generar Contraseña</button>
+        <button onClick={generatePassword} className='btn'>Generar Contraseña</button>
         <div className='password-container'>
-        <p>Tú Contraseña: </p>
-        <p>{password}</p>
+          <p>Tú Contraseña: </p>
+          <p>{password}</p>
         </div>
+
+        <button onClick={copyToClipboard} className='btn'>Copiar</button>
+
       </main>
 
       <footer className='footer'>
